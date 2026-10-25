@@ -12,6 +12,15 @@
 .button {
   width: 100%;
 }
-.button {
-  margin-top: 10px;
+
+.uploadButton {
+  padding: 10px;
+  border: 1px solid #ccc;
+  display: block;
+  background-color: #1653c0;
+  width: calc(100% - 24px);
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 10px;
 }
