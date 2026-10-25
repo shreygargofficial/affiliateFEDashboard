@@ -24,3 +24,7 @@
   text-align: center;
   margin-bottom: 10px;
 }
+.error {
+  color: red;
+  margin-top: 10px;
+}

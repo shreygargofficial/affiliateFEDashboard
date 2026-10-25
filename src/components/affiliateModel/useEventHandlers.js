@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { endpoint } from "../../../endpoint/endpoint";
 
-const useEventHandlers = () => {
+const useEventHandlers = ({ handleClose }) => {
   const [file, setFile] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const submit = async (data) => {
-    console.log("data", data);
     try {
       const formData = new FormData();
 
@@ -20,9 +20,20 @@ const useEventHandlers = () => {
         body: formData,
       });
       const result = await res.json();
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+      handleClose();
+      setError("");
       console.log("result", result);
-    } catch (e) {
-      console.log("error", e);
+    } catch (error) {
+      console.log("error", error);
+      if (error.response) {
+        console.log("error.response", error.response.data.error);
+      } else {
+        console.log("error.message", error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -38,7 +49,7 @@ const useEventHandlers = () => {
     setFile(file);
     console.log("file", data.target.files[0]);
   };
-  return { file, fileHandler, loading, submit };
+  return { error, file, fileHandler, loading, submit };
 };
 
 export default useEventHandlers;

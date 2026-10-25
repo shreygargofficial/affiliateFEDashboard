@@ -24,6 +24,7 @@ function AllAffiliate() {
     affiliateData,
     dialogOpen,
     fetchAffiliateData,
+    handleDialogClose,
     handleDelete,
     handleUpdate,
     loading,
@@ -37,10 +38,7 @@ function AllAffiliate() {
   return (
     <MuiBox className={css.root}>
       <h1>All Affiliates</h1>
-      <AffiliateModel
-        open={dialogOpen}
-        handleClose={() => setDialogOpen(false)}
-      />
+      <AffiliateModel open={dialogOpen} handleClose={handleDialogClose} />
       <MuiBox className={css.floatButton} onClick={addClickHandler}>
         <Fab color="primary" aria-label="add">
           <AddIcon />

@@ -35,7 +35,9 @@ function AffiliateModel(props) {
       link: "",
     },
   });
-  const { file, fileHandler, loading, submit } = useEventHandlers();
+  const { error, file, fileHandler, loading, submit } = useEventHandlers({
+    handleClose,
+  });
   if (loading) <Loader />;
   return (
     <MuiBox className={`${css.root} `}>
@@ -98,6 +100,7 @@ function AffiliateModel(props) {
               >
                 Submit
               </Button>
+              <small className={css.error}>{error}</small>
             </div>
           </MuiBox>
         </MuiBox>

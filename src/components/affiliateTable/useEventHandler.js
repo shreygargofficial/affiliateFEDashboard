@@ -54,12 +54,18 @@ const useEventhandler = () => {
 
     // Implement the update logic here
   };
+
+  const handleDialogClose = (action) => {
+    setDialogOpen(false);
+    fetchAffiliateData();
+  };
   return {
     addClickHandler,
     affiliateData,
     dialogOpen,
     fetchAffiliateData,
     handleDelete,
+    handleDialogClose,
     handleUpdate,
     loading,
     setDialogOpen,
