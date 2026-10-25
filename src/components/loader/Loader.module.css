@@ -5,7 +5,27 @@
   align-items: center;
   width: 100vw;
   position: fixed;
+  --loaderSize: 50px;
+  --loaderThikness: 4px;
 }
 
 .loader {
+  width: var(--loaderSize);
+  height: var(--loaderSize);
+  border: var(--loaderThikness) solid red;
+  border-left-width: var(--loaderThikness);
+  border-right-width: var(--loaderThikness);
+  border-top-width: var(--loaderThikness);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  animation: animation 0.5s linear infinite;
+}
+
+@keyframes animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

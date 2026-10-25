@@ -39,7 +39,6 @@ const useEventhandler = () => {
   };
 
   const handleUpdate = async (id) => {
-    console.log("hello");
     try {
       setLoading(true);
     } catch (error) {
