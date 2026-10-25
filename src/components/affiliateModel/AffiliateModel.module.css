@@ -1,0 +1,17 @@
+.root {
+  --dialogWidth: 500px;
+}
+
+.dialogContainer {
+  width: var(--dialogWidth);
+}
+.textFieldContainer {
+  padding: 20px 25px;
+}
+.textField,
+.button {
+  width: 100%;
+}
+.button {
+  margin-top: 10px;
+}

@@ -13,16 +13,21 @@ import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import useEventhandler from "./useEventHandler";
 import { endpoint } from "../../../endpoint/endpoint";
-import css from "./Affiliate.module.css";
 import Loader from "../loader/Loader";
+import AffiliateModel from "../affiliateModel/AffiliateModel";
+
+import css from "./Affiliate.module.css";
 
 function AllAffiliate() {
   const {
+    addClickHandler,
     affiliateData,
+    dialogOpen,
     fetchAffiliateData,
     handleDelete,
     handleUpdate,
     loading,
+    setDialogOpen,
   } = useEventhandler();
 
   useEffect(() => {
@@ -32,7 +37,11 @@ function AllAffiliate() {
   return (
     <MuiBox className={css.root}>
       <h1>All Affiliates</h1>
-      <MuiBox className={css.floatButton}>
+      <AffiliateModel
+        open={dialogOpen}
+        handleClose={() => setDialogOpen(false)}
+      />
+      <MuiBox className={css.floatButton} onClick={addClickHandler}>
         <Fab color="primary" aria-label="add">
           <AddIcon />
         </Fab>
