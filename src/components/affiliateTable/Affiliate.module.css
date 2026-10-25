@@ -1,0 +1,24 @@
+.root {
+  padding: 10px;
+  --imageWidth: 50px;
+  --imageHeight: 50px;
+  --paddingContainer: 20px;
+}
+
+.container {
+  padding: var(--paddingContainer);
+}
+.floatButton {
+  position: fixed;
+  top: 50px;
+  right: 20px;
+  cursor: pointer;
+}
+.image {
+  width: var(--imageWidth);
+  height: var(--imageHeight);
+}
+
+.icon {
+  cursor: pointer;
+}
