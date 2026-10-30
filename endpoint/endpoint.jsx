@@ -1,1 +1,1 @@
-export const endpoint = "http://localhost:5001";
+export const endpoint = "https://affiliatebe-production.up.railway.app";
