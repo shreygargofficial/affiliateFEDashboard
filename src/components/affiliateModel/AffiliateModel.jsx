@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import MuiBox from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import LockResetIcon from "@mui/icons-material/LockResetOutlined";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,6 +12,7 @@ import useEventHandlers from "./useEventHandlers";
 
 import css from "./AffiliateModel.module.css";
 import Loader from "../loader/Loader";
+import { endpoint } from "../../../endpoint/endpoint";
 
 const affiliateSchema = z.object({
   title: z
@@ -22,11 +25,13 @@ const affiliateSchema = z.object({
 });
 
 function AffiliateModel(props) {
-  const { open, handleClose } = props;
+  const { handleClose, id } = props;
+  const [affiliateData, setAffiliateData] = useState({});
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm({
     resolver: zodResolver(affiliateSchema),
     defaultValues: {
@@ -35,14 +40,32 @@ function AffiliateModel(props) {
       link: "",
     },
   });
-  const { error, file, fileHandler, loading, submit } = useEventHandlers({
-    handleClose,
-  });
+  const { error, file, fileHandler, loading, resetHandler, submit } =
+    useEventHandlers({
+      affiliateData,
+      handleClose,
+      reset,
+    });
+
+  useEffect(() => {
+    const fetchAffiliateDataById = async () => {
+      const response = await fetch(`${endpoint}/api/getAffiliateById/${id}`);
+      const myData = await response.json();
+      setAffiliateData(myData);
+      reset({
+        title: myData.title || "",
+        description: myData.description || "",
+        link: myData.link || "",
+      });
+    };
+    fetchAffiliateDataById();
+  }, []);
+
   if (loading) <Loader />;
   return (
     <MuiBox className={`${css.root} `}>
-      <Dialog onClose={handleClose} open={open} fullWidth>
-        <DialogTitle>Add Affiliate</DialogTitle>
+      <Dialog onClose={handleClose} open={true} fullWidth>
+        <DialogTitle>{id ? "Update Affiliate" : "Add Affilate"}</DialogTitle>
         <MuiBox>
           <MuiBox className={css.textFieldContainer}>
             <TextField
@@ -78,27 +101,38 @@ function AffiliateModel(props) {
             />
           </MuiBox>
           <MuiBox className={css.textFieldContainer}>
-            <div className={css.button}>
-              <label for="image" className={css.uploadButton}>
-                Upload Image
-              </label>
-              <small>{file.name}</small>
-              <input
-                type="file"
-                id="image"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={fileHandler}
-              />
-            </div>
+            {!id && (
+              <div className={css.button}>
+                <label for="image" className={css.uploadButton}>
+                  Upload Image
+                </label>
+                <small>{file.name}</small>
+                <input
+                  type="file"
+                  id="image"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={fileHandler}
+                />
+              </div>
+            )}
+            {id && (
+              <MuiBox sx={{ marginBottom: "10px", textAlign: "center" }}>
+                <LockResetIcon color="primary" onClick={resetHandler} />
+              </MuiBox>
+            )}
             <div className={css.button}>
               <Button
                 variant="contained"
                 disabled={isSubmitting}
                 className={css.textField}
-                onClick={handleSubmit(submit)}
+                onClick={
+                  id
+                    ? handleSubmit(submit.bind(null, id))
+                    : handleSubmit(submit)
+                }
               >
-                Submit
+                {id ? "Update" : "Add"}
               </Button>
               <small className={css.error}>{error}</small>
             </div>

@@ -4,6 +4,7 @@ import { endpoint } from "../../../endpoint/endpoint";
 const useEventhandler = () => {
   const [affiliateData, setAffiliateData] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [id, setId] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const fetchAffiliateData = async () => {
@@ -41,10 +42,13 @@ const useEventhandler = () => {
 
   const addClickHandler = () => {
     // Implement the logic to handle the add button click
+    setId(null);
     setDialogOpen(true);
   };
   const handleUpdate = async (id) => {
     try {
+      setId(id);
+      setDialogOpen(true);
       setLoading(true);
     } catch (error) {
       console.error("Error updating affiliate:", error);
@@ -67,6 +71,7 @@ const useEventhandler = () => {
     handleDelete,
     handleDialogClose,
     handleUpdate,
+    id,
     loading,
     setDialogOpen,
   };

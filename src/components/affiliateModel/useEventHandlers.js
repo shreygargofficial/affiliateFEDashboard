@@ -1,24 +1,41 @@
 import { useState } from "react";
 import { endpoint } from "../../../endpoint/endpoint";
 
-const useEventHandlers = ({ handleClose }) => {
+const useEventHandlers = ({ affiliateData, handleClose, reset }) => {
   const [file, setFile] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const submit = async (data) => {
+  const submit = async (data, updateData) => {
     try {
+      console.log("data", data, "updatedData", updateData);
+
       const formData = new FormData();
 
-      formData.append("title", data.title);
-      formData.append("description", data.description);
-      formData.append("link", data.link);
-      formData.append("image", file);
-
       setLoading(true);
-      let res = await fetch(`${endpoint}/api/addAffiliate`, {
-        method: "POST",
-        body: formData,
-      });
+      let res;
+      if (typeof data === "object" && data.title) {
+        formData.append("title", data.title);
+        formData.append("description", data.description);
+        formData.append("link", data.link);
+        formData.append("image", file);
+        res = await fetch(`${endpoint}/api/addAffiliate`, {
+          method: "POST",
+          body: formData,
+        });
+      } else {
+        res = await fetch(`${endpoint}/api/updateAffiliate/${data}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: updateData.title,
+            description: updateData.description,
+            link: updateData.link,
+          }),
+        });
+      }
+
       const result = await res.json();
       if (result.error) {
         setError(result.error);
@@ -49,7 +66,15 @@ const useEventHandlers = ({ handleClose }) => {
     setFile(file);
     console.log("file", data.target.files[0]);
   };
-  return { error, file, fileHandler, loading, submit };
+
+  const resetHandler = () => {
+    reset({
+      title: affiliateData.title || "",
+      description: affiliateData.description || "",
+      link: affiliateData.link || "",
+    });
+  };
+  return { error, file, fileHandler, loading, resetHandler, submit };
 };
 
 export default useEventHandlers;
