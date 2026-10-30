@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { endpoint } from "../../../endpoint/endpoint";
 
-const useEventHandlers = ({ affiliateData, handleClose, reset }) => {
+const useEventHandlers = ({ handleClose, id, reset }) => {
   const [file, setFile] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [affiliateData, setAffiliateData] = useState({});
   const submit = async (data, updateData) => {
     try {
       console.log("data", data, "updatedData", updateData);
@@ -43,9 +44,29 @@ const useEventHandlers = ({ affiliateData, handleClose, reset }) => {
       }
       handleClose();
       setError("");
-      console.log("result", result);
     } catch (error) {
       console.log("error", error);
+      if (error.response) {
+        console.log("error.response", error.response.data.error);
+      } else {
+        console.log("error.message", error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchAffiliateDataById = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${endpoint}/api/getAffiliateById/${id}`);
+      const myData = await response.json();
+      setAffiliateData(myData);
+      reset({
+        title: myData.title || "",
+        description: myData.description || "",
+        link: myData.link || "",
+      });
+    } catch (error) {
       if (error.response) {
         console.log("error.response", error.response.data.error);
       } else {
@@ -74,7 +95,15 @@ const useEventHandlers = ({ affiliateData, handleClose, reset }) => {
       link: affiliateData.link || "",
     });
   };
-  return { error, file, fileHandler, loading, resetHandler, submit };
+  return {
+    error,
+    fetchAffiliateDataById,
+    file,
+    fileHandler,
+    loading,
+    resetHandler,
+    submit,
+  };
 };
 
 export default useEventHandlers;

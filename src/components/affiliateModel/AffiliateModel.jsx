@@ -12,7 +12,6 @@ import useEventHandlers from "./useEventHandlers";
 
 import css from "./AffiliateModel.module.css";
 import Loader from "../loader/Loader";
-import { endpoint } from "../../../endpoint/endpoint";
 
 const affiliateSchema = z.object({
   title: z
@@ -26,7 +25,7 @@ const affiliateSchema = z.object({
 
 function AffiliateModel(props) {
   const { handleClose, id } = props;
-  const [affiliateData, setAffiliateData] = useState({});
+
   const {
     register,
     handleSubmit,
@@ -40,28 +39,26 @@ function AffiliateModel(props) {
       link: "",
     },
   });
-  const { error, file, fileHandler, loading, resetHandler, submit } =
-    useEventHandlers({
-      affiliateData,
-      handleClose,
-      reset,
-    });
+  const {
+    error,
+    fetchAffiliateDataById,
+    file,
+    fileHandler,
+    loading,
+    resetHandler,
+    submit,
+  } = useEventHandlers({
+    handleClose,
+    id,
+    reset,
+  });
 
   useEffect(() => {
-    const fetchAffiliateDataById = async () => {
-      const response = await fetch(`${endpoint}/api/getAffiliateById/${id}`);
-      const myData = await response.json();
-      setAffiliateData(myData);
-      reset({
-        title: myData.title || "",
-        description: myData.description || "",
-        link: myData.link || "",
-      });
-    };
     fetchAffiliateDataById();
   }, []);
 
   if (loading) <Loader />;
+
   return (
     <MuiBox className={`${css.root} `}>
       <Dialog onClose={handleClose} open={true} fullWidth>
